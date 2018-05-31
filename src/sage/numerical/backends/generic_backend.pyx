@@ -509,7 +509,7 @@ cdef class GenericBackend:
             for i, c in coefficients:
                 coefficients_d.append((i, c[d]))
             lower_bound_d = None if lower_bound is None else lower_bound[d]
-            upper_bound_d = None if upper_bound is None else upper_bound[d] 
+            upper_bound_d = None if upper_bound is None else upper_bound[d]
             self.add_linear_constraint(coefficients_d, lower_bound_d, upper_bound_d, name=name)
 
     @classmethod
@@ -872,7 +872,7 @@ cdef class GenericBackend:
         tester = self._tester(**options)
         p = self
         tester.assertGreaterEqual(self.ncols(), 0)
-    
+
     cpdef int nrows(self):
         """
         Return the number of rows/constraints.
@@ -1251,7 +1251,7 @@ cdef class GenericBackend:
                                    "{}({}) does not match".format(method, i))
         for method in ("row_bounds", "row", "row_name"):
             assert_equal_row_data(method)
-    
+
     def _test_copy(self, **options):
         """
         Test whether the backend can be copied
@@ -1262,15 +1262,18 @@ cdef class GenericBackend:
         cp = copy(self)
         self._do_test_problem_data(tester, cp)
 
+
     def _test_copy_does_not_share_data(self, **options):
         """
         Test whether copy makes an independent copy of the backend.
         """
         tester = self._tester(**options)
+
         cp = copy(self)
         cpcp = copy(cp)
         del cp
         self._do_test_problem_data(tester, cpcp)
+
 
     # TODO: We should have a more systematic way of generating MIPs for testing.
     @classmethod
@@ -1288,6 +1291,7 @@ cdef class GenericBackend:
             pass
         # From doctest of GenericBackend.problem_name:
         p.problem_name("There once was a french fry")
+
         p._test_copy(**options)
         p._test_copy_does_not_share_data(**options)
 
@@ -1577,7 +1581,7 @@ def default_mip_solver(solver=None):
             return default_solver
 
         else:
-            for s in ["Cplex", "Gurobi", "Coin", "Glpk"]:
+            for s in ["Cplex", "Gurobi", "Coin", "Glpk", "SCIP"]:
                 try:
                     default_mip_solver(s)
                     return s
@@ -1631,8 +1635,16 @@ def default_mip_solver(solver=None):
     elif solver == "Interactivelp":
         default_solver = solver
 
+    elif solver == "SCIP" or solver == "Scip":
+        try:
+            from sage.libs.scip.scip import SCIP
+            from pyscipopt import Model
+            default_solver = solver
+        except ImportError:
+            raise ValueError("SCIP is not available. Please refer to the documentation to install it.")
+
     else:
-        raise ValueError("'solver' should be set to 'GLPK', 'Coin', 'CPLEX', 'CVXOPT', 'Gurobi', 'PPL', 'InteractiveLP', a callable, or None.")
+        raise ValueError("'solver' should be set to 'GLPK', 'Coin', 'CPLEX', 'CVXOPT', 'Gurobi', 'PPL', 'SCIP', 'InteractiveLP', a callable, or None.")
 
 cpdef GenericBackend get_solver(constraint_generation = False, solver = None, base_ring = None):
     """
@@ -1664,7 +1676,7 @@ cpdef GenericBackend get_solver(constraint_generation = False, solver = None, ba
       - When set to ``True``, after solving the ``MixedIntegerLinearProgram``,
         it is possible to add a constraint, and then solve it again.
         The effect is that solvers that do not support this feature will not be
-        used.
+        used.  (Coin and SCIP are such solvers.)
 
       - Defaults to ``False``.
 
@@ -1744,7 +1756,7 @@ cpdef GenericBackend get_solver(constraint_generation = False, solver = None, ba
 
         # We do not want to use Coin for constraint_generation. It just does not
         # work
-        if solver == "Coin" and constraint_generation:
+        if solver in ("Coin", "SCIP") and constraint_generation:
             solver = "Glpk"
 
     if callable(solver):
@@ -1788,5 +1800,10 @@ cpdef GenericBackend get_solver(constraint_generation = False, solver = None, ba
         from sage.numerical.backends.interactivelp_backend import InteractiveLPBackend
         return InteractiveLPBackend(base_ring=base_ring)
 
+    elif solver == "Scip":
+        from sage.numerical.backends.scip_backend import SCIPBackend
+        return SCIPBackend()
+
     else:
-        raise ValueError("'solver' should be set to 'GLPK', 'GLPK/exact', 'Coin', 'CPLEX', 'CVXOPT', 'Gurobi', 'PPL', 'InteractiveLP', None (in which case the default one is used), or a callable.")
+        raise ValueError("'solver' should be set to 'GLPK', 'GLPK/exact', 'Coin', 'CPLEX', 'CVXOPT', 'Gurobi', 'PPL', 'SCIP', 'InteractiveLP', None (in which case the default one is used), or a callable.")
+
