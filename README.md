@@ -350,7 +350,7 @@ Simplified directory layout (only essential files/directories):
 SAGE_ROOT                 Root directory (sage-x.y.z in Sage tarball)
 ├── build
 │   └── pkgs              Every package is a subdirectory here
-│       ├── atlas
+│       ├── 4ti2
 │       …
 │       └── zn_poly
 ├── COPYING.txt           Copyright information
@@ -367,9 +367,9 @@ SAGE_ROOT                 Root directory (sage-x.y.z in Sage tarball)
 │   ├── dochtml.log       Log of the documentation build
 │   ├── install.log       Full install log
 │   └── pkgs              Build logs of individual packages
-│       ├── atlas-3.10.1.p7.log
+│       ├── alabaster-0.7.12.log
 │       …
-│       └── zn_poly-0.9.p11.log
+│       └── zn_poly-0.9.2.log
 ├── m4                    M4 macros for configure
 │   └── *.m4
 ├── Makefile              Running "make" uses this file
@@ -380,7 +380,7 @@ SAGE_ROOT                 Root directory (sage-x.y.z in Sage tarball)
 │   ├── doc               Sage documentation sources
 │   └── sage              The Sage library source code
 ├── upstream              Source tarballs of packages
-│   ├── atlas-3.10.1.tar.bz2
+│   ├── Babel-2.6.0.tar.gz
 │   …
 │   └── zn_poly-0.9.tar.bz2
 └── VERSION.txt

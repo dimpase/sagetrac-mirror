@@ -50,7 +50,6 @@ class Application(object):
         $ sage --package list | sort
         4ti2
         arb
-        atlas
         autotools
         [...]
         zn_poly
@@ -143,7 +142,7 @@ class Application(object):
     def update_latest_all(self):
         log.debug('Attempting to update all packages')
         exclude = [
-            'atlas', 'flint', 'bzip2', 'ecm', 'freetype', 'gap', 'glpk', 'graphs',
+            'flint', 'bzip2', 'ecm', 'freetype', 'gap', 'glpk', 'graphs',
             'iconv', 'patch', 'r', 'configure', 'bliss', 'readline', 'decorator',
             'igraph', 'rw', 'planarity', 'gambit', 
         ]
