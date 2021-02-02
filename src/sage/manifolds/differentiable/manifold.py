@@ -449,12 +449,14 @@ from sage.rings.infinity import infinity, minus_infinity
 from sage.rings.integer import Integer
 from sage.manifolds.manifold import TopologicalManifold
 from sage.manifolds.differentiable.mixed_form_algebra import MixedFormAlgebra
+from sage.manifolds.differentiable.vectorframe import VectorFrame
 
 from typing import Optional, Union, TYPE_CHECKING
 if TYPE_CHECKING:
     from sage.manifolds.differentiable.vectorfield_module import VectorFieldFreeModule, VectorFieldModule
 
 ###############################################################################
+
 
 class DifferentiableManifold(TopologicalManifold):
     r"""
@@ -2960,7 +2962,7 @@ class DifferentiableManifold(TopologicalManifold):
                 for sdom in self._supersets:
                     sdom._frame_changes[(frame2, frame1)] = change_of_frame.inverse()
 
-    def vector_frame(self, *args, **kwargs):
+    def vector_frame(self, *args, **kwargs) -> VectorFrame:
         r"""
         Define a vector frame on ``self``.
 
