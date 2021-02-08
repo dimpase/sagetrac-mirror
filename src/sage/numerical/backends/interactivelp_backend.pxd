@@ -17,9 +17,11 @@ cdef class InteractiveLPBackend(GenericBackend):
     cdef object lp_std_form
     cdef object std_form_transformation
     cdef object final_dictionary
+    cdef object current_dictionary
     cdef int verbosity
 
-    cpdef int solve(self, basic_variables=*) except -1
+    cpdef int solve(self) except -1
+    cpdef set_dictionary(self, basic_variables=*)
     cpdef dictionary(self)
 
     cpdef interactive_lp_problem(self)
