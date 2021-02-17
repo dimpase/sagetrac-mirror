@@ -485,7 +485,7 @@ class PolynomialSequence_generic(Sequence_generic):
             sage: F,s = sr.polynomial_system()
             sage: P = F.ring()
             sage: I = F.ideal()
-            sage: I.elimination_ideal(P('s000*s001*s002*s003*w100*w101*w102*w103*x100*x101*x102*x103'))
+            sage: I.elimination_ideal(P('s000*s001*s002*s003*w100*w101*w102*w103*x100*x101*x102*x103').variables())
             Ideal (k002 + (a^3 + a + 1)*k003 + (a^2 + 1),
                    k001 + (a^3)*k003, k000 + (a)*k003 + (a^2),
                    k103 + k003 + (a^2 + a + 1),
