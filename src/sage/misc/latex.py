@@ -1994,8 +1994,10 @@ class MathJax:
             subparts.append(part[closing + 1:])
             parts[i] = "".join(subparts)
         from sage.misc.latex_macros import sage_configurable_latex_macros
+        from sage.misc.latex_macros import sage_configurable_mathjax_macros
         latex_string = ''.join(
             sage_configurable_latex_macros +
+            sage_configurable_mathjax_macros +
             [_Latex_prefs._option['macros']] +
             parts
         )

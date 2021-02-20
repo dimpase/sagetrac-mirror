@@ -44,6 +44,26 @@ To see evidence of the results of the code here, run ``sage --docbuild
 tutorial latex`` (for example), and look at the resulting LaTeX file in
 ``SAGE_DOC/latex/en/tutorial/``.  The preamble should
 contain '\newcommand' lines for each of the entries in ``macros``.
+
+If the LaTeX representation of an object uses a LaTeX macro that is not
+understood by MathJax, a definition can be added to the list in
+``sage_configurable_mathjax_macros``, so that the definition can be used by
+the ``show`` command.
+
+EXAMPLES::
+
+    sage: var("dollar", latex_name=r"\textdollar")
+    dollar
+    sage: latex(dollar)
+    {\textdollar}
+    sage: from sage.misc.latex_macros import sage_configurable_mathjax_macros
+    sage: sage_configurable_mathjax_macros
+    ['\\newcommand{\\multicolumn}[2]{}', '\\newcommand{\\setlength}[2]{}']
+    sage: save_config = sage_configurable_mathjax_macros.copy()
+    sage: sage_configurable_mathjax_macros += [r"\newcommand{\textdollar}{\$}"]
+    sage: show(dollar)
+    ...\newcommand{\textdollar}{\$}{\textdollar}...
+    sage: sage_configurable_mathjax_macros = save_config  # restore original config
 """
 
 def produce_latex_macro(name, *sample_args):
@@ -190,17 +210,24 @@ def sage_latex_macros():
     """
     return [produce_latex_macro(*x) for x in macros] + sage_configurable_latex_macros
 
+sage_configurable_mathjax_macros = [
+    r"\newcommand{\multicolumn}[2]{}",
+    r"\newcommand{\setlength}[2]{}"
+    ]
+
 def sage_mathjax_macros():
     r"""
     Return list of MathJax macro definitions for Sage as
     JavaScript. This feeds each item output by
     :func:`sage_latex_macros` to
-    :func:`convert_latex_macro_to_mathjax`.
+    :func:`convert_latex_macro_to_mathjax`, and also includes the macro
+    definitions in the variable ``sage_configurable_mathjax_macros``.
 
     EXAMPLES::
 
         sage: from sage.misc.latex_macros import sage_mathjax_macros
         sage: sage_mathjax_macros()
-        ['ZZ: "\\\\Bold{Z}"', 'NN: "\\\\Bold{N}"', ...
+        ['ZZ: "\\\\Bold{Z}"', 'NN: "\\\\Bold{N}"', ... 'setlength: ["",2]'...
     """
-    return [convert_latex_macro_to_mathjax(m) for m in sage_latex_macros()]
+    return [convert_latex_macro_to_mathjax(m)
+        for m in sage_latex_macros() + sage_configurable_mathjax_macros]
