@@ -455,25 +455,25 @@ class BackendBase(SageObject):
             sage: out
             OutputLatex container
             sage: out.latex
-            buffer containing 45 bytes
+            buffer containing 103 bytes
             sage: out.latex.get_str()
-            '\\newcommand{\\Bold}[1]{\\mathbf{#1}}\\frac{1}{2}'
+            '\\newcommand{\\Bold}[1]{\\mathbf{#1}}\\newcommand{\\multicolumn}[2]{}\\newcommand{\\setlength}[2]{}\\frac{1}{2}'
             sage: out.mathjax()
-            '<html><script type="math/tex; mode=display">\\newcommand{\\Bold}[1]{\\mathbf{#1}}\\frac{1}{2}</script></html>'
+            '<html><script type="math/tex; mode=display">\\newcommand{\\Bold}[1]{\\mathbf{#1}}\\newcommand{\\multicolumn}[2]{}\\newcommand{\\setlength}[2]{}\\frac{1}{2}</script></html>'
 
             sage: out = backend.latex_formatter([1/2, x, 3/4, ZZ], concatenate=False)
             sage: out.latex.get_str()
-            '\\newcommand{\\Bold}[1]{\\mathbf{#1}}\\left[\\frac{1}{2}, x, \\frac{3}{4}, \\Bold{Z}\\right]'
+            '\\newcommand{\\Bold}[1]{\\mathbf{#1}}\\newcommand{\\multicolumn}[2]{}\\newcommand{\\setlength}[2]{}\\left[\\frac{1}{2}, x, \\frac{3}{4}, \\Bold{Z}\\right]'
             sage: out = backend.latex_formatter([1/2, x, 3/4, ZZ], concatenate=True)
             sage: out.latex.get_str()
-            '\\newcommand{\\Bold}[1]{\\mathbf{#1}}\\frac{1}{2} x \\frac{3}{4} \\Bold{Z}'
+            '\\newcommand{\\Bold}[1]{\\mathbf{#1}}\\newcommand{\\multicolumn}[2]{}\\newcommand{\\setlength}[2]{}\\frac{1}{2} x \\frac{3}{4} \\Bold{Z}'
 
         TESTS::
 
             sage: backend.latex_formatter([], concatenate=False).latex.get_str()
-            '\\newcommand{\\Bold}[1]{\\mathbf{#1}}\\left[\\right]'
+            '\\newcommand{\\Bold}[1]{\\mathbf{#1}}\\newcommand{\\multicolumn}[2]{}\\newcommand{\\setlength}[2]{}\\left[\\right]'
             sage: backend.latex_formatter([], concatenate=True).latex.get_str()
-            '\\newcommand{\\Bold}[1]{\\mathbf{#1}}'
+            '\\newcommand{\\Bold}[1]{\\mathbf{#1}}\\newcommand{\\multicolumn}[2]{}\\newcommand{\\setlength}[2]{}'
         """
         concatenate = kwds.get('concatenate', False)
         from sage.misc.latex import MathJax

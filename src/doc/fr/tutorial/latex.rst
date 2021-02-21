@@ -83,13 +83,13 @@ possède la classe CSS "math", laquelle indique de faire appel à MathJax. ::
     sage: var('z')
     z
     sage: mj(z^12)
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}z^{12}</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...z^{12}</script></html>
     sage: mj(QQ)
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\Bold{Q}</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\Bold{Q}</script></html>
     sage: mj(ZZ['x'])
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\Bold{Z}[x]</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\Bold{Z}[x]</script></html>
     sage: mj(integrate(z^4, z))
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\frac{1}{5} \, z^{5}</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\frac{1}{5} \, z^{5}</script></html>
 
 Utilisation de base
 ===================
@@ -126,9 +126,9 @@ HTML utilisant MathJax. C'est le code qui sera ensuite utilisé dans le
 bloc-notes ::
 
     sage: pretty_print(x^12)
-    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}x^{12}</script></html>
+    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}...x^{12}</script></html>
     sage: pretty_print(integrate(sin(x), x))
-    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}-\cos\left(x\right)</script></html>
+    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}...-\cos\left(x\right)</script></html>
 
 Le bloc-notes dispose de deux autres fonctionnalités pour appeler LaTeX.
 Premièrement, lorsque la case « Typeset » (juste au-dessus de la première
@@ -197,10 +197,10 @@ mais la définition de la macro TeX ``\Bold{}`` fournie par Sage. ::
     sage: from sage.misc.latex import MathJax
     sage: mj=MathJax()
     sage: mj(QQ)
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\Bold{Q}</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\Bold{Q}</script></html>
     sage: latex.blackboard_bold(True)
     sage: mj(QQ)
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbb{#1}}\Bold{Q}</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbb{#1}}...\Bold{Q}</script></html>
     sage: latex.blackboard_bold(False)
 
 On peut aussi définir de nouvelles macros TeX ou charger des packages
@@ -220,7 +220,7 @@ bloc-notes. ::
     sage: from sage.misc.latex import MathJax
     sage: mj=MathJax()
     sage: mj(x+y)
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\newcommand{\foo}{bar}x + y</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\newcommand{\foo}{bar}x + y</script></html>
 
 Ces macros supplémentaires sont disponibles aussi quand Sage appelle TeX pour
 compiler un fragment de document trop gros pour MathJax. C'est la fonction

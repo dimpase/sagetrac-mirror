@@ -9,7 +9,7 @@ is falling back on the plain text.
 EXAMPLES::
 
     sage: pretty_print(1, 2, 3)
-    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}1 2 3</script></html>
+    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}...1 2 3</script></html>
 
 Printing a graphics object just prints a string, whereas
 :func:`pretty_print` does not print anything and just shows the
@@ -47,7 +47,7 @@ class SequencePrettyPrinter(SageObject):
         EXAMPLES::
 
             sage: pretty_print(1, 2, 3)   # indirect doctest
-            <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}1 2 3</script></html>
+            <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}...1 2 3</script></html>
             sage: from sage.repl.rich_output.pretty_print import SequencePrettyPrinter
             sage: SequencePrettyPrinter(1, 2, 3).pretty_print()
             1 2 3
@@ -194,22 +194,22 @@ def pretty_print(*args, **kwds):
     EXAMPLES::
 
         sage: pretty_print(ZZ)
-        <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\Bold{Z}</script></html>
+        <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}...\Bold{Z}</script></html>
 
         sage: pretty_print("Integers = ", ZZ) # trac 11775
-        <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\verb|Integers|\phantom{\verb!x!}\verb|=| \Bold{Z}</script></html>
+        <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}...\verb|Integers|\phantom{\verb!x!}\verb|=| \Bold{Z}</script></html>
 
     To typeset LaTeX code as-is, use :class:`LatexExpr`::
 
         sage: pretty_print(LatexExpr(r"\frac{x^2 + 1}{x - 2}"))
-        <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\frac{x^2 + 1}{x - 2}</script></html>
+        <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}...\frac{x^2 + 1}{x - 2}</script></html>
 
     TESTS::
 
         sage: plt = plot(sin)
         sage: pretty_print(plt)             # graphics output
         sage: pretty_print(ZZ, 123, plt)    # optional - latex
-        <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\Bold{Z} 123 %% Creator: Matplotlib, PGF backend...</script></html>
+        <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}...\Bold{Z} 123 %% Creator: Matplotlib, PGF backend...</script></html>
         sage: pretty_print(plt, plt)        # graphics output
     """
     dm = get_display_manager()
@@ -241,7 +241,7 @@ def show(*args, **kwds):
     EXAMPLES::
 
         sage: show(1)
-        <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}1</script></html>
+        <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}...1</script></html>
     """
     from sage.graphs.generic_graph import GenericGraph
     if len(args) == 1 and isinstance(args[0], GenericGraph):

@@ -91,13 +91,13 @@ evoca a classe "matemática" do CSS, a qual então emprega o MathJax. ::
     sage: var('z')
     z
     sage: js(z^12)
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}z^{12}</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...z^{12}</script></html>
     sage: js(QQ)
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\Bold{Q}</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\Bold{Q}</script></html>
     sage: js(ZZ[x])
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\Bold{Z}[x]</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\Bold{Z}[x]</script></html>
     sage: js(integrate(z^4, z))
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\frac{1}{5} \, z^{5}</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\frac{1}{5} \, z^{5}</script></html>
 
 Uso Básico
 ==========
@@ -133,9 +133,9 @@ O comando interno ``pretty_print()`` ilustra a conversão de objetos do
 Sage para HTML que emprega o MathJax no Notebook. ::
 
     sage: pretty_print(x^12)
-    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}x^{12}</script></html>
+    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}...x^{12}</script></html>
     sage: pretty_print(integrate(sin(x), x))
-    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}-\cos\left(x\right)</script></html>
+    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}...-\cos\left(x\right)</script></html>
 
 O Notebook tem outros dois recursos para empregar o TeX. O primeiro é
 o botão "Typeset" bem acima da primeira célula da folha de trabalho, à
@@ -207,11 +207,11 @@ obtido redefinindo a macro ``\Bold{}`` que faz parte do Sage. ::
     sage: from sage.misc.latex import MathJax
     sage: js = MathJax()
     sage: js(QQ)
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\Bold{Q}</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\Bold{Q}</script></html>
 
     sage: latex.blackboard_bold(True)
     sage: js(QQ)
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbb{#1}}\Bold{Q}</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbb{#1}}...\Bold{Q}</script></html>
     sage: latex.blackboard_bold(False)
 
 É possível aproveitar os recursos do TeX adicionando novas funções
@@ -231,7 +231,7 @@ trechos de códigos TeX no Notebook. ::
     sage: from sage.misc.latex import MathJax
     sage: js = MathJax()
     sage: js(x+y)
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\newcommand{\foo}{bar}x + y</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\newcommand{\foo}{bar}x + y</script></html>
 
 Macros adicionais usadas dessa forma serão também usadas eventualmente
 se a versão do TeX no seu sistema for usada para lidar com algo muito

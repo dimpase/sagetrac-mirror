@@ -86,13 +86,13 @@ die dann MathJax verwendet. ::
     sage: var('z')
     z
     sage: mj(z^12)
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}z^{12}</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...z^{12}</script></html>
     sage: mj(QQ)
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\Bold{Q}</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\Bold{Q}</script></html>
     sage: mj(ZZ['x'])
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\Bold{Z}[x]</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\Bold{Z}[x]</script></html>
     sage: mj(integrate(z^4, z))
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\frac{1}{5} \, z^{5}</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\frac{1}{5} \, z^{5}</script></html>
 
 Grundlegende Nutzung
 ====================
@@ -129,9 +129,9 @@ Der interne ``pretty_print()`` Befehl zeigt die Konvertierung von Sage
 Objekten in HTML Code der MathJax nutzt im Notebook.  ::
 
     sage: pretty_print(x^12)
-    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}x^{12}</script></html>
+    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}...x^{12}</script></html>
     sage: pretty_print(integrate(sin(x), x))
-    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}-\cos\left(x\right)</script></html>
+    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}...-\cos\left(x\right)</script></html>
 
 Das Notebook hat zwei weitere Möglichkeiten TeX zu nutzen. Die erste
 ist der "Typeset"-Knopf über der ersten Zelle eines Arbeitsblatts,
@@ -206,10 +206,10 @@ integriert ist. ::
     sage: from sage.misc.latex import MathJax
     sage: mj=MathJax()
     sage: mj(QQ)
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\Bold{Q}</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\Bold{Q}</script></html>
     sage: latex.blackboard_bold(True)
     sage: mj(QQ)
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbb{#1}}\Bold{Q}</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbb{#1}}...\Bold{Q}</script></html>
     sage: latex.blackboard_bold(False)
 
 Dank der Erweiterbarkeit von TeX können Sie selbst Makros und Pakete
@@ -228,7 +228,7 @@ MathJax als TeX-Schnipsel  interpretiert werden. ::
     sage: from sage.misc.latex import MathJax
     sage: mj=MathJax()
     sage: mj(x+y)
-    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\newcommand{\foo}{bar}x + y</script></html>
+    <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\newcommand{\foo}{bar}x + y</script></html>
 
 Zusätzliche Makros, die so hinzugefügt wurden, werden auch vom
 systemweiten TeX genutzt, wenn MathJax an seine Grenzen gestoßen ist.

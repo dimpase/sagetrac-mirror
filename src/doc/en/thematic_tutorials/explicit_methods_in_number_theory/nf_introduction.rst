@@ -282,7 +282,7 @@ command
 ::
 
     sage: pretty_print(a)
-    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}-\frac{1}{2} ...
+    <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}...-\frac{1}{2} ...
 
 .. math::
 

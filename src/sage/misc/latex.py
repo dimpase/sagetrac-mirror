@@ -1873,9 +1873,9 @@ class MathJax:
 
         sage: from sage.misc.latex import MathJax
         sage: MathJax()(3)
-        <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}3</script></html>
+        <html><script type="math/tex; mode=display">...3</script></html>
         sage: MathJax()(ZZ)
-        <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\Bold{Z}</script></html>
+        <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}...\Bold{Z}</script></html>
     """
 
     def __call__(self, x, combine_all=False):
@@ -1899,7 +1899,7 @@ class MathJax:
 
             sage: from sage.misc.latex import MathJax
             sage: MathJax()(3)
-            <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}3</script></html>
+            <html><script type="math/tex; mode=display">...3</script></html>
             sage: str(MathJax().eval(ZZ['x'], mode='display')) == str(MathJax()(ZZ['x']))
             True
         """
@@ -1937,13 +1937,11 @@ class MathJax:
 
             sage: from sage.misc.latex import MathJax
             sage: MathJax().eval(3, mode='display')
-            <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}3</script></html>
+            <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\newcommand{\multicolumn}[2]{}\newcommand{\setlength}[2]{}3</script></html>
             sage: MathJax().eval(3, mode='inline')
-            <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}3</script></html>
-            sage: MathJax().eval(type(3), mode='inline')  # py2
-            <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\verb|<type|\phantom{\verb!x!}\verb|'sage.rings.integer.Integer'>|</script></html>
-            sage: MathJax().eval(type(3), mode='inline')  # py3
-            <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\verb|<class|\phantom{\verb!x!}\verb|'sage.rings.integer.Integer'>|</script></html>
+            <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\newcommand{\multicolumn}[2]{}\newcommand{\setlength}[2]{}3</script></html>
+            sage: MathJax().eval(type(3), mode='inline')
+            <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\newcommand{\multicolumn}[2]{}\newcommand{\setlength}[2]{}\verb|<class|\phantom{\verb!x!}\verb|'sage.rings.integer.Integer'>|</script></html>
         """
         # Get a regular LaTeX representation of x
         x = latex(x, combine_all=combine_all)
@@ -2137,11 +2135,11 @@ def view(objects, title='Sage', debug=False, sep='', tiny=False,
 
         sage: sage.misc.latex.EMBEDDED_MODE = True
         sage: view(3)
-        <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}3</script></html>
+        <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\newcommand{\multicolumn}[2]{}\newcommand{\setlength}[2]{}3</script></html>
         sage: view(3, mode='display')
-        <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}3</script></html>
+        <html><script type="math/tex; mode=display">\newcommand{\Bold}[1]{\mathbf{#1}}\newcommand{\multicolumn}[2]{}\newcommand{\setlength}[2]{}3</script></html>
         sage: view((x,2), combine_all=True) # trac 11775
-        <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}x 2</script></html>
+        <html><script type="math/tex">\newcommand{\Bold}[1]{\mathbf{#1}}\newcommand{\multicolumn}[2]{}\newcommand{\setlength}[2]{}x 2</script></html>
         sage: sage.misc.latex.EMBEDDED_MODE = False
 
     TESTS::
@@ -2458,7 +2456,7 @@ def pretty_print_default(enable=True):
 
         sage: pretty_print_default(True)
         sage: 'foo'
-        \newcommand{\Bold}[1]{\mathbf{#1}}\verb|foo|
+        \newcommand{\Bold}[1]{\mathbf{#1}}...\verb|foo|
         sage: pretty_print_default(False)
         sage: 'foo'
         'foo'

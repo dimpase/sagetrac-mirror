@@ -122,7 +122,7 @@ class SageDisplayFormatter(DisplayFormatter):
             [u'text/plain']
             sage: shell.run_cell('%display latex')   # indirect doctest
             sage: shell.run_cell('get_ipython().display_formatter.default_mime()')
-            \newcommand{\Bold}[1]{\mathbf{#1}}\left[\verb|text/plain|, \verb|text/html|\right]
+            \newcommand{\Bold}[1]{\mathbf{#1}}...\left[\verb|text/plain|, \verb|text/html|\right]
             sage: shell.run_cell('%display default')
             sage: shell.quit()
         """
@@ -184,7 +184,7 @@ class SageDisplayFormatter(DisplayFormatter):
             sage: shell.run_cell('%display latex')   # indirect doctest
             sage: shell.run_cell('set(get_ipython().display_formatter.format(ipython_image)[0].keys())'
             ....:                ' == set(["text/plain", "image/png"])')
-            \newcommand{\Bold}[1]{\mathbf{#1}}\mathrm{True}
+            \newcommand{\Bold}[1]{\mathbf{#1}}...\mathrm{True}
             sage: shell.run_cell('%display default')
             sage: shell.quit()
 

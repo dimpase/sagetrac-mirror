@@ -518,7 +518,7 @@ class DisplayManager(SageObject):
 
             sage: dm.preferences.text = 'latex'
             sage: dm._preferred_text_formatter([1/42])
-            \newcommand{\Bold}[1]{\mathbf{#1}}\verb|OutputLatex|\phantom{\verb!x!}\verb|container|
+            \newcommand{\Bold}[1]{\mathbf{#1}}...\verb|OutputLatex|\phantom{\verb!x!}\verb|container|
 
             sage: del dm.preferences.text   # reset to default
         """
