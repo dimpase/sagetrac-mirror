@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+cd $SAGE_ROOT
+./sage --docbuild --no-pdf-links all html $SAGE_DOCBUILD_OPTS

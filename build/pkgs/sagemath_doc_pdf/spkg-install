@@ -1,0 +1,3 @@
+#! /usr/bin/env bash
+cd $SAGE_ROOT
+./sage --docbuild all pdf $SAGE_DOCBUILD_OPTS
