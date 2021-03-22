@@ -39,7 +39,7 @@ for SYSTEM in arch debian fedora cygwin homebrew conda; do
                 if [ -n "PKG_SYSTEM_PACKAGES" ]; then
                     if [ -f $PKG_SCRIPTS/spkg-configure.m4 ]; then
                        case "$PKG_BASE:$PKG_TYPE" in
-                           *:standard)
+                           *:standard|tox:*)
                                SYSTEM_PACKAGES+=" $PKG_SYSTEM_PACKAGES"
                                ;;
                            _recommended:*|pandoc:*)
@@ -50,8 +50,8 @@ for SYSTEM in arch debian fedora cygwin homebrew conda; do
                                ;;
                        esac
                     else
-                        case "$PKG_TYPE" in
-                            standard)
+                        case "$PKG_BASE:$PKG_TYPE" in
+                            *:standard|tox:*)
                                 SAGELIB_SYSTEM_PACKAGES+=" $PKG_SYSTEM_PACKAGES"
                                 ;;
                             *)
