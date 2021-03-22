@@ -665,7 +665,7 @@ $(1)-tox-%: FORCE
 		. '$$(SAGE_ROOT)/src/bin/sage-env-config' && \
 		. '$$(SAGE_ROOT)/src/bin/sage-env' && \
 		SAGE_SPKG_WHEELS=$$(SAGE_LOCAL)/var/lib/sage/wheels \
-		tox -v -v -v -e $*
+		tox -v -v -v -e $$*
 
 # Creating source distribution
 $(1)-sdist:
