@@ -10484,7 +10484,7 @@ class Polyhedron_base(Element):
             sage: triangle = Polyhedron([(1,0,0), (0,1,0), (0,0,1)]);  triangle
             A 2-dimensional polyhedron in ZZ^3 defined as the convex hull of 3 vertices
             sage: A = triangle.affine_hull_manifold(name='A'); A
-            2-dimensional differentiable submanifold A embedded in the Euclidean space E^3
+            2-dimensional Riemannian submanifold A embedded in the Euclidean space E^3
             sage: A.embedding().display()
             A --> E^3
                (x0, x1) |--> (x, y, z) = (x0, x1, -x0 - x1 + 1)
@@ -10495,7 +10495,7 @@ class Polyhedron_base(Element):
         Orthogonal version::
 
             sage: A = triangle.affine_hull_manifold(name='A', orthogonal=True); A
-            2-dimensional differentiable submanifold A embedded in the Euclidean space E^3
+            2-dimensional Riemannian submanifold A embedded in the Euclidean space E^3
             sage: A.embedding().display()
             A --> E^3
                (x0, x1) |--> (x, y, z) = (-1/2*x0 - 1/3*x1 + 1, 1/2*x0 - 1/3*x1, 2/3*x1)
@@ -10552,7 +10552,7 @@ class Polyhedron_base(Element):
             sage: triangle = Polyhedron([(1,0,0), (0,1,0), (0,0,1)]); triangle
             A 2-dimensional polyhedron in ZZ^3 defined as the convex hull of 3 vertices
             sage: T = triangle.relative_interior_manifold('T'); T
-            Open subset T of the 2-dimensional differentiable submanifold H embedded in the Euclidean space E^3
+            Open subset T of the 2-dimensional Riemannian submanifold H embedded in the Euclidean space E^3
             sage: pc = T.manifold().embedding().inverse()((1/3, 1/3, 1/3))
             sage: pc in T
             True
