@@ -10503,12 +10503,12 @@ class Polyhedron_base(Element):
             E^3 --> A
                (x, y, z) |--> (x0, x1) = (-x + y + 1, -1/2*x - 1/2*y + z + 1/2)
 
-        Arrangement of affine hull of facets::
+        Arrangement of affine hulls of facets::
 
             sage: D = polytopes.dodecahedron()
             sage: E3 = EuclideanSpace(3)
             sage: submanifolds = [
-            ....:     F.as_polyhedron().affine_hull_manifold(name=f'F{i}', orthogonal=True, ambient_space=E3)
+            ....:     F.as_polyhedron().affine_hull_manifold(name=f'aff_F{i}', orthogonal=True, ambient_space=E3)
             ....:     for i, F in enumerate(D.facets())]
             sage: sum(FM.plot({}, srange(-2, 2, 0.1), srange(-2, 2, 0.1), opacity=0.2)  # not tested
             ....:     for FM in submanifolds) + D.plot()
