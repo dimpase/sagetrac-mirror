@@ -3182,7 +3182,7 @@ cdef class MIPVariable(SageObject):
 
     def mip(self):
         r"""
-        Returns the :class:`MixedIntegerLinearProgram` in which ``self`` is a variable.
+        Return the :class:`MixedIntegerLinearProgram` in which ``self`` is a variable.
 
         EXAMPLES::
 
@@ -3192,6 +3192,31 @@ cdef class MIPVariable(SageObject):
             True
         """
         return self._p
+
+    def name(self):
+        r"""
+        Return the name of the variable.
+
+        OUTPUT:
+
+        - a string, or ``None`` if no name has been assigned.
+
+        EXAMPLES::
+
+            sage: p = MixedIntegerLinearProgram(solver='GLPK')
+            sage: v = p.new_variable(nonnegative=True)
+            sage: v.name() is None
+            True
+            sage: w = p.new_variable(name='w')
+            sage: w.name()
+            'w'
+            sage: p.<a,b> = MixedIntegerLinearProgram(solver='GLPK')
+            sage: a.name()
+            'a'
+            sage: b.name()
+            'b'
+        """
+        return self._name or None
 
     def __mul__(left, right):
         """
