@@ -12,6 +12,9 @@ Parent class for combinatorial polyhedra
 #                  https://www.gnu.org/licenses/
 # ****************************************************************************
 
+from sage.structure.parent import Parent
+from sage.structure.unique_representation import UniqueRepresentation
+
 class CombinatorialPolyhedra(UniqueRepresentation, Parent):
 
     pass
