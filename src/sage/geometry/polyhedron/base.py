@@ -1048,13 +1048,11 @@ class Polyhedron_base(Element):
             sage: p = Polyhedron(vertices=[(0,0,0),(1,0,0)],rays=[(-1,1,0),(1,1,0),(0,0,1)])
             sage: p.plot(fill='mediumspringgreen', point='red', size=30, width=2)
             Graphics3d Object
-
-        Bug to be fixed::
             sage: cylinder = Polyhedron(vertices = [(0, 0, 0), (1, 0, 0), (0, 1, 0)], lines=[(0, 0, 1)])
-            sage: cylinder.plot(fill='red')  # was always black
+            sage: cylinder.plot(fill='red')  # check it is not all black
             Graphics3d Object
-            sage: quarter = Polyhedron(rays = [(-1,0,0),(1,0,0),(0,1,0),(0,0,1)])
-            sage: quarter.plot(fill='rainbow') # was all black, now too many colors
+            sage: quarter = Polyhedron(rays = [(-1, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1)])
+            sage: quarter.plot(fill='rainbow') # check it is not all black nor with too many colors
             Graphics3d Object
         """
         def merge_options(*opts):
