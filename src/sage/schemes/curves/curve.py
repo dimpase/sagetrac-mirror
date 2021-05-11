@@ -94,19 +94,24 @@ class Curve_generic(AlgebraicScheme_subscheme):
             sage: x,y,z = PolynomialRing(QQ, 3, names='x,y,z').gens()
             sage: C = Curve(y^2*z - x^3 - 17*x*z^2 + y*z^2)
             sage: latex(C)
-            \text{Projective Plane curve over $\Bold{Q}$ defined by $-x^{3} + y^{2} z - 17 x z^{2} + y z^{2}$}
+            \text{Projective Plane curve over $\Bold{Q}$
+            defined by $-x^{3} + y^{2} z - 17 x z^{2} + y z^{2}$}
 
             sage: A2 = AffineSpace(2, QQ, names=['x','y'])
             sage: x, y = A2.coordinate_ring().gens()
             sage: C = Curve(y^2 - x^3 - 17*x + y)
             sage: latex(C)
-            \text{Affine Plane curve over $\Bold{Q}$ defined by $-x^{3} + y^{2} - 17 x + y$}
+            \text{Affine Plane curve over $\Bold{Q}$
+            defined by $-x^{3} + y^{2} - 17 x + y$}
         """
-        if self.defining_ideal().is_zero() and self.ambient_space().dimension() == 1:
-            return r"\text{{{} line over ${}$}}".format(self._repr_type(), latex(self.base_ring()))
+        if (self.defining_ideal().is_zero()
+                and self.ambient_space().dimension() == 1):
+            ambient_type, ring = self._repr_type(), latex(self.base_ring())
+            return fr"\text{{{ambient_type} line over ${ring}$}}"
         else:
-            return r"\text{{{} curve over ${}$ defined by {}}}".format(self._repr_type(), latex(self.base_ring()),
-                 ', '.join(['${0}$'.format(latex(x)) for x in self.defining_polynomials()]))
+            ambient_type, ring = self._repr_type(), latex(self.base_ring())
+            polys = ', '.join(f'${latex(p)}$' for p in self.defining_polynomials())
+            return fr"\text{{{ambient_type} curve over ${ring}$ defined by {polys}}}"
 
     def defining_polynomial(self):
         """
