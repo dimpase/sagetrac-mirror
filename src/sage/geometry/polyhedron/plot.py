@@ -21,9 +21,9 @@ from sage.misc.latex import LatexExpr
 from sage.symbolic.constants import pi
 from sage.structure.sequence import Sequence
 
-from sage.plot.all import (Graphics, point2d, line2d, arrow, polygon2d,
-                           Color, rainbow)
-from sage.plot.plot3d.all import point3d, line3d, arrow3d, polygons3d, polygon3d
+from sage.plot.all import Graphics, point2d, line2d, arrow, polygon2d, rainbow
+from sage.plot.plot3d.all import point3d, line3d, arrow3d, polygons3d
+from sage.plot.plot3d.texture import Texture
 from sage.plot.plot3d.transform import rotate_arbitrary
 
 
@@ -1045,16 +1045,12 @@ class Projection(SageObject):
         n = len(polys)
         N = max([-1] + [i for p in polys for i in p]) + 1
         coords = self.coordinates_of(range(N))
-        if ('color' not in kwds) or (kwds['color'] != 'rainbow') or (n <= 1):
-            return polygons3d(polys, coords, **kwds)
+        col = kwds.pop('color', (0, 0, 1))
+        if col is 'rainbow':
+            t_list = [Texture(rainbow(n, 'rgbtuple')[i]) for i in range(n)]
+            return polygons3d(polys, coords, texture_list=t_list, **kwds)
         else:
-            for i in range(n):
-                kwds['color'] = Color(rainbow(n, "rgbtuple")[i])
-                if i == 0:
-                    g = polygon3d(list(coords[j] for j in polys[i]), **kwds)
-                else:
-                    g += polygon3d(list(coords[j] for j in polys[i]), **kwds)
-            return g
+            return polygons3d(polys, coords, color=col, **kwds)
 
     def render_0d(self, point_opts=None, line_opts=None, polygon_opts=None):
         """
