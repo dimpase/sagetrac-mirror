@@ -168,6 +168,8 @@ The extrinsic curvature as a tensor field on the submanifold::
 AUTHORS:
 
 - Florentin Jaffredo (2018): initial version
+- Eric Gourgoulhon (2018-2019): add documentation
+- Matthias Koeppe (2021): open subsets of submanifolds
 
 REFERENCES:
 
@@ -177,7 +179,9 @@ REFERENCES:
 """
 
 # *****************************************************************************
-#  Copyright (C) 2018 Florentin Jaffredo <florentin.jaffredo@polytechnique.edu>
+#  Copyright (C) 2018      Florentin Jaffredo <florentin.jaffredo@polytechnique.edu>
+#  Copyright (C) 2018-2019 Eric Gourgoulhon <eric.gourgoulhon@obspm.fr>
+#  Copyright (C) 2021      Matthias Koeppe <mkoeppe@math.ucdavis.edu>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -392,7 +396,7 @@ class PseudoRiemannianSubmanifold(PseudoRiemannianManifold,
         return "{}-dimensional {} submanifold {} immersed in the {}".format(
                 self._dim, self._structure.name, self._name, self._ambient)
 
-    def open_subset(self, name, latex_name=None, coord_def={}):
+    def open_subset(self, name, latex_name=None, coord_def={}, supersets=None):
         r"""
         Create an open subset of ``self``.
 
@@ -415,6 +419,8 @@ class PseudoRiemannianSubmanifold(PseudoRiemannianManifold,
           terms of coordinates; ``coord_def`` must a be dictionary with keys
           charts in the manifold's atlas and values the symbolic expressions
           formed by the coordinates to define the subset.
+        - ``supersets`` -- (default: only ``self``) list of sets that the
+          new open subset is a subset of
 
         OUTPUT:
 
@@ -460,7 +466,10 @@ class PseudoRiemannianSubmanifold(PseudoRiemannianManifold,
                                            latex_name=latex_name,
                                            metric_latex_name=self._metric_latex_name,
                                            start_index=self._sindex)
-        self._init_open_subset(resu, coord_def=coord_def)
+        if supersets is None:
+            supersets = [self]
+        for superset in supersets:
+            superset._init_open_subset(resu, coord_def=coord_def)
         return resu
 
     def ambient_metric(self):
