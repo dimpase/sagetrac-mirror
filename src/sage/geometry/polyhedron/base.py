@@ -10664,7 +10664,7 @@ class Polyhedron_base(Element):
         return aff_name, aff_latex_name
 
     def as_manifold_subset(self, name=None, latex_name=None, start_index=0, ambient_space=None,
-                           names=None, **kwds):
+                           ambient_chart=None, names=None, **kwds):
         r"""
         Return the relative interior of ``self`` as a subset of its affine hull manifold.
 
@@ -10697,6 +10697,7 @@ class Polyhedron_base(Element):
                                                       latex_name=relint_latex_name,
                                                       start_index=start_index,
                                                       ambient_space=ambient_space,
+                                                      ambient_chart=ambient_chart,
                                                       names=names,
                                                       **kwds)
         return relint_self.closure(name=name, latex_name=latex_name)
@@ -10726,7 +10727,7 @@ class Polyhedron_base(Element):
         return relint_name, relint_latex_name
 
     def relative_interior_manifold(self, name=None, latex_name=None, start_index=0, ambient_space=None,
-                                   names=None, **kwds):
+                                   ambient_chart=None, names=None, **kwds):
         r"""
         Return the relative interior of ``self`` as an open subset of its affine hull manifold.
 
@@ -10761,7 +10762,9 @@ class Polyhedron_base(Element):
         if name is None:
             name, latex_name = self._relative_interior_name_latex_name()
         aff_self = self.affine_hull_manifold(start_index=start_index,
-                                             ambient_space=ambient_space, names=names, **kwds)
+                                             ambient_space=ambient_space,
+                                             ambient_chart=ambient_chart,
+                                             names=names, **kwds)
         C_aff_self = aff_self.default_chart()
         if self.is_full_dimensional():
             x = vector(C_aff_self)
