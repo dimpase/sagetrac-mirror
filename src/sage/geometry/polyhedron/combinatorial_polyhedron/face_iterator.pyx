@@ -1,4 +1,4 @@
-r"""
+"""
 Face iterator for polyhedra
 
 This iterator in principle works on every graded lattice, where
@@ -178,7 +178,7 @@ from sage.rings.integer     cimport smallInteger
 from cysignals.signals      cimport sig_check
 from .conversions           cimport bit_rep_to_Vrep_list
 from .conversions            import facets_tuple_to_bit_rep_of_facets
-from .base                  cimport CombinatorialPolyhedron
+from .base                  cimport CombinatorialPolyhedron_class
 
 from sage.geometry.polyhedron.face import combinatorial_face_to_polyhedral_face, PolyhedronFace
 from .face_list_data_structure cimport *
@@ -195,7 +195,7 @@ cdef class FaceIterator_base(SageObject):
 
     See :class:`FaceIterator`.
     """
-    def __init__(self, CombinatorialPolyhedron C, bint dual, output_dimension=None):
+    def __init__(self, CombinatorialPolyhedron_class C, bint dual, output_dimension=None):
         r"""
         Initialize :class:`FaceIterator_base`.
 
