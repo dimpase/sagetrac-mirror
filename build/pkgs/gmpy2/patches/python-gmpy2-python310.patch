@@ -1,0 +1,36 @@
+diff --git a/src/gmpy2_convert_gmp.c b/src/gmpy2_convert_gmp.c
+index 2550560..f4a2679 100644
+--- a/src/gmpy2_convert_gmp.c
++++ b/src/gmpy2_convert_gmp.c
+@@ -222,10 +222,18 @@ GMPy_PyLong_From_MPZ(MPZ_Object *obj, CTXT_Object *context)
+     while ((size>0) && (result->ob_digit[size-1] == 0)) {
+         size--;
+     }
++#if PY_VERSION_HEX >= 0x030900A0
++    Py_SET_SIZE(result, size);
++#else
+     Py_SIZE(result) = size;
++#endif
+ 
+     if (negative) {
++#if PY_VERSION_HEX >= 0x030900A0
++        Py_SET_SIZE(result, - Py_SIZE(result));
++#else
+         Py_SIZE(result) = - Py_SIZE(result);
++#endif
+     }
+     return (PyObject*)result;
+ }
+diff --git a/test/runtests.py b/test/runtests.py
+index fb9f2b3..5e5842d 100644
+--- a/test/runtests.py
++++ b/test/runtests.py
+@@ -75,7 +75,7 @@ print("  Caching Values: (Cache size)    {0}".format(gmpy2.get_cache()[0]))
+ print("  Caching Values: (Size in limbs) {0}".format(gmpy2.get_cache()[1]))
+ print()
+ 
+-if sys.version.startswith('3.1'):
++if sys.version.startswith('3.1.'):
+     print("Due to differences in formatting of exceptions and Python 3.x, there")
+     print("will be test failures for exception handling when the tests are run")
+     print("with Python 3.1. The doctest module in Python 3.2 and later does not")
