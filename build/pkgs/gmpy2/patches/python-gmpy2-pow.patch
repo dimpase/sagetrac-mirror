@@ -1,0 +1,42 @@
+--- a/test/test_gmpy2_mpz_inplace.txt	2020-07-30 20:21:41.000000000 -0600
++++ b/test/test_gmpy2_mpz_inplace.txt	2021-03-09 13:59:09.754648136 -0700
+@@ -149,14 +149,12 @@ mpz(25)
+ mpz(625)
+ >>> x **= -2
+ Traceback (most recent call last):
+-  File "<stdin>", line 1, in <module>
+-TypeError: unsupported operand type(s) for ** or pow(): 'mpz' and 'int'
++  ...
++ValueError: pow() exponent cannot be negative
+ >>> x **= 2; x
+ mpz(390625)
+->>> x **= mpfr(2)
+-Traceback (most recent call last):
+-  File "<stdin>", line 1, in <module>
+-TypeError: unsupported operand type(s) for ** or pow(): 'mpz' and 'mpfr'
++>>> x **= mpfr(2); x
++mpfr('152587890625.0')
+ >>> 1
+ 1
+ 
+--- a/test/test_gmpy2_xmpz_inplace.txt	2020-07-30 20:21:41.000000000 -0600
++++ b/test/test_gmpy2_xmpz_inplace.txt	2021-03-09 14:14:50.675340634 -0700
+@@ -134,14 +134,12 @@ xmpz(25)
+ xmpz(625)
+ >>> x **= -2
+ Traceback (most recent call last):
+-  File "<stdin>", line 1, in <module>
+-TypeError: unsupported operand type(s) for ** or pow(): 'xmpz' and 'int'
++  ...
++ValueError: pow() exponent cannot be negative
+ >>> x **= 2; x
+ xmpz(390625)
+->>> x **= mpfr(2)
+-Traceback (most recent call last):
+-  File "<stdin>", line 1, in <module>
+-TypeError: unsupported operand type(s) for ** or pow(): 'xmpz' and 'mpfr'
++>>> x **= mpfr(2); x
++mpfr('152587890625.0')
+ >>> 1
+ 1
+ 

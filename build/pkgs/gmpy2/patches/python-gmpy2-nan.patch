@@ -1,0 +1,11 @@
+--- a/src/gmpy2_hash.c	2020-07-30 20:21:41.000000000 -0600
++++ b/src/gmpy2_hash.c	2021-05-10 10:47:42.838963521 -0600
+@@ -147,7 +147,7 @@ _mpfr_hash(mpfr_t f)
+             }
+         }
+         else {
+-            return _PyHASH_NAN;
++            return 0;
+         }
+     }
+ 
