@@ -39,8 +39,13 @@ REFERENCES:
 
 from sage.structure.sage_object import SageObject
 from sage.structure.unique_representation import UniqueRepresentation
+from sage.categories.sets_cat import Sets
+from sage.categories.topological_spaces import TopologicalSpaces
+from sage.categories.homset import Hom
+from sage.categories.map import Map
 from sage.symbolic.ring import SR
 from sage.rings.infinity import Infinity
+from sage.modules.free_module import VectorSpace
 from sage.misc.latex import latex
 from sage.misc.decorators import options
 from sage.manifolds.chart_func import ChartFunctionRing
@@ -49,7 +54,7 @@ from sage.symbolic.expression import Expression
 from sage.ext.fast_callable import fast_callable
 
 
-class Chart(UniqueRepresentation, SageObject):
+class Chart(Map): #, UniqueRepresentation):
     r"""
     Chart on a topological manifold.
 
@@ -313,6 +318,16 @@ class Chart(UniqueRepresentation, SageObject):
                              " has already been declared on " +
                              "the {}".format(self._domain))
         self._domain._charts_by_coord[coord_string] = self
+
+        if self._periods:
+            # If any coordinate is periodic, we would need to make the codomain a torus
+            # in order to declare that the chart is a continuous map.  But Sage does not
+            # have a suitable class for this.
+            cat = Sets()
+        else:
+            cat = TopologicalSpaces()
+        Map.__init__(self, Hom(self._manifold, self._domain.base_field(), cat))
+
         #
         # Additional restrictions on the coordinates
         self._restrictions = []  # to be set with method add_restrictions()
