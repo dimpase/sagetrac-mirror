@@ -63,6 +63,8 @@ class ConvexSet_base(SageObject):
         r"""
         Return the dimension of ``self``.
 
+        Subclasses must provide an implementation of this method.
+
         TESTS::
 
             sage: from sage.geometry.convex_set import ConvexSet_base
@@ -94,28 +96,55 @@ class ConvexSet_base(SageObject):
     def ambient_vector_space(self, base_field=None):
         r"""
         Return the ambient vector space.
+
+        Subclasses must provide an implementation of this method.
+
+        The default implementations of :meth:`ambient`, :meth:`ambient_dim`,
+        :meth:`ambient_dimension` use this method.
+
+        EXAMPLES::
+
+            sage: from sage.geometry.convex_set import ConvexSet_base
+            sage: C = ConvexSet_base()
+            sage: C.ambient_vector_space()
+            Traceback (most recent call last):
+            ...
+            NotImplementedError: <abstract method ambient_vector_space at ...>
         """
 
-    @abstract_method
     def ambient(self):
         r"""
         Return the ambient convex set or space.
-        """
 
-    @abstract_method
+        The default implementation delegates to :meth:`ambient_vector_space`.
+
+        EXAMPLES::
+
+            sage: from sage.geometry.convex_set import ConvexSet_base
+            sage: class ExampleSet(ConvexSet_base):
+            ....:     def ambient_vector_space(self, base_field=None):
+            ....:         return (base_field or QQ)^2001
+            sage: ExampleSet().ambient_dim()
+            2001
+        """
+        return self.ambient_vector_space()
+
     def ambient_dim(self):
         r"""
         Return the dimension of the ambient convex set or space.
 
-        TESTS::
+        The default implementation obtains it from :meth:`ambient`.
+
+        EXAMPLES::
 
             sage: from sage.geometry.convex_set import ConvexSet_base
-            sage: C = ConvexSet_base()
-            sage: C.ambient_dim()
-            Traceback (most recent call last):
-            ...
-            NotImplementedError: <abstract method ambient_dim at ...>
+            sage: class ExampleSet(ConvexSet_base):
+            ....:     def ambient(self):
+            ....:         return QQ^7
+            sage: ExampleSet().ambient_dim()
+            7
         """
+        return self.ambient().dimension()
 
     def ambient_dimension(self):
         r"""
@@ -414,6 +443,45 @@ class ConvexSet_base(SageObject):
             TypeError: 'NotImplementedType' object is not callable
         """
 
+    def an_element(self):
+        r"""
+        Return a point of ``self``.
+
+        If ``self`` is empty, an :class:`EmptySetError` will be raised.
+
+        The default implementation delegates to :meth:`some_elements`.
+
+        EXAMPLES::
+
+            sage: from sage.geometry.convex_set import ConvexSet_compact
+            sage: class BlueBox(ConvexSet_compact):
+            ....:     def some_elements(self):
+            ....:         yield 'blue'
+            ....:         yield 'cyan'
+            sage: BlueBox().an_element()
+        """
+        try:
+            return next(iter(self.some_elements()))
+        except StopIteration:
+            raise EmptySetError
+
+    @abstract_method(optional=True)
+    def some_elements(self):
+        r"""
+        Generate some points of ``self``.
+
+        If ``self`` is empty, no points are generated; no exception will be raised.
+
+        TESTS::
+
+            sage: from sage.geometry.convex_set import ConvexSet_base
+            sage: C = ConvexSet_base()
+            sage: C.some_elements(C)
+            Traceback (most recent call last):
+            ...
+            TypeError: 'NotImplementedType' object is not callable
+        """
+
     @abstract_method(optional=True)
     def cartesian_product(self, other):
         """
@@ -505,10 +573,11 @@ class ConvexSet_base(SageObject):
             if ambient_point is not None:
                 tester.assertEqual(contains_space_point, self.contains(ambient_point))
             tester.assertEqual(contains_space_point, self.contains(space_coords))
-            from sage.rings.qqbar import AA
-            ext_space = self.ambient_vector_space(AA)
-            ext_space_point = ext_space(space_point)
-            tester.assertEqual(contains_space_point, self.contains(ext_space_point))
+            if space.base_ring().is_exact():
+                from sage.rings.qqbar import AA
+                ext_space = self.ambient_vector_space(AA)
+                ext_space_point = ext_space(space_point)
+                tester.assertEqual(contains_space_point, self.contains(ext_space_point))
             from sage.symbolic.ring import SR
             symbolic_space = self.ambient_vector_space(SR)
             symbolic_space_point = symbolic_space(space_point)
