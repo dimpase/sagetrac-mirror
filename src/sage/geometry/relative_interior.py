@@ -80,6 +80,7 @@ class RelativeInterior(ConvexSet_relatively_open):
             Relative interior of
              a 1-dimensional polyhedron in ZZ^2 defined as the convex hull of 2 vertices
             sage: ri_segment.ambient()
+            Vector space of dimension 2 over Rational Field
         """
         return self._polyhedron.ambient()
 
@@ -94,6 +95,7 @@ class RelativeInterior(ConvexSet_relatively_open):
             Relative interior of
              a 1-dimensional polyhedron in ZZ^2 defined as the convex hull of 2 vertices
             sage: ri_segment.ambient_vector_space()
+            Vector space of dimension 2 over Rational Field
         """
         return self._polyhedron.ambient_vector_space(base_field=base_field)
 
@@ -227,7 +229,7 @@ class RelativeInterior(ConvexSet_relatively_open):
         assert not self._polyhedron.is_relatively_open()
         return False
 
-    def some_elements(self):
+    def _some_elements_(self):
         r"""
         Generate some points of ``self``.
 
@@ -236,7 +238,10 @@ class RelativeInterior(ConvexSet_relatively_open):
         EXAMPLES::
 
             sage: P = polytopes.simplex()
-            sage: list(P.relative_interior().some_elements())
+            sage: ri_P = P.relative_interior()
+            sage: ri_P.an_element()              # indirect doctest
+            (1/4, 1/4, 1/4, 1/4)
+            sage: ri_P.some_elements()           # indirect doctest
             [(1/4, 1/4, 1/4, 1/4), (1/2, 1/4, 1/8, 1/8)]
         """
         for p in self._polyhedron.some_elements():
