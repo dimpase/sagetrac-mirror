@@ -370,7 +370,7 @@ class ConvexSet_base(SageObject):
             ....:         return 42
             ....:     def ambient_dim(self):
             ....:         return 91
-            sage: TestSuite(FaultyConvexSet()).run(skip=('_test_pickling', '_test_contains'))
+            sage: TestSuite(FaultyConvexSet()).run(skip=('_test_pickling', '_test_contains', '_test_as_set_object'))
             Failure in _test_convex_set:
             ...
             The following tests failed: _test_convex_set
@@ -384,7 +384,7 @@ class ConvexSet_base(SageObject):
             ....:         return QQ^3
             ....:     def ambient_dim(self):
             ....:         return 3
-            sage: TestSuite(BiggerOnTheInside()).run(skip=('_test_pickling', '_test_contains'))
+            sage: TestSuite(BiggerOnTheInside()).run(skip=('_test_pickling', '_test_contains', '_test_as_set_object'))
             Failure in _test_convex_set:
             ...
             The following tests failed: _test_convex_set
