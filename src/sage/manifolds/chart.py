@@ -38,18 +38,19 @@ REFERENCES:
 # ****************************************************************************
 
 from sage.structure.sage_object import SageObject
-from sage.structure.unique_representation import UniqueRepresentation
+from sage.structure.mutability import Mutability
 from sage.symbolic.ring import SR
 from sage.rings.infinity import Infinity
 from sage.misc.latex import latex
 from sage.misc.decorators import options
+from sage.misc.fast_methods import WithEqualityById
 from sage.manifolds.chart_func import ChartFunctionRing
 from sage.manifolds.calculus_method import CalculusMethod
 from sage.symbolic.expression import Expression
 from sage.ext.fast_callable import fast_callable
 
 
-class Chart(UniqueRepresentation, SageObject):
+class Chart(WithEqualityById, Mutability, SageObject):
     r"""
     Chart on a topological manifold.
 
@@ -315,7 +316,7 @@ class Chart(UniqueRepresentation, SageObject):
         self._domain._charts_by_coord[coord_string] = self
         #
         # Additional restrictions on the coordinates
-        self._restrictions = []  # to be set with method add_restrictions()
+        self._coord_restrictions = []  # to be set with method add_restrictions()
         #
         # The chart is added to the domain's atlas, as well as to all the
         # atlases of the domain's supersets; moreover the first defined chart
@@ -658,10 +659,12 @@ class Chart(UniqueRepresentation, SageObject):
             False
 
         """
+        if self.is_immutable():
+            raise ValueError("cannot add restrictions to a chart once it has been used or set immutable")
         if not isinstance(restrictions, list):
             # case of a single condition or conditions to be combined by "or"
             restrictions = [restrictions]
-        self._restrictions.extend(restrictions)
+        self._coord_restrictions.extend(restrictions)
 
     def restrict(self, subset, restrictions=None):
         r"""
@@ -723,11 +726,12 @@ class Chart(UniqueRepresentation, SageObject):
                 coordinates += repr(coord) + ' '
             res = type(self)(subset, coordinates,
                              calc_method=self._calc_method._current)
-            res._restrictions.extend(self._restrictions)
+            res._coord_restrictions.extend(self._coord_restrictions)
             # The coordinate restrictions are added to the result chart and
             # possibly transformed into coordinate bounds:
             if restrictions is not None:
                 res.add_restrictions(restrictions)
+            res.set_immutable()
             # Update of supercharts and subcharts:
             res._supercharts.update(self._supercharts)
             for schart in self._supercharts:
@@ -791,11 +795,11 @@ class Chart(UniqueRepresentation, SageObject):
         else:
             parameters = None
         # Check of restrictions:
-        if self._restrictions:
+        if self._coord_restrictions:
             substitutions = dict(zip(self._xx, coordinates))
             if parameters:
                 substitutions.update(parameters)
-            return self._check_restrictions(self._restrictions, substitutions)
+            return self._check_restrictions(self._coord_restrictions, substitutions)
         return True
 
     def _check_restrictions(self, restrict, substitutions):
@@ -839,6 +843,7 @@ class Chart(UniqueRepresentation, SageObject):
             False
 
         """
+        self.set_immutable()
         if isinstance(restrict, tuple): # case of 'or' conditions
             combine = False
             for cond in restrict:
@@ -1886,7 +1891,7 @@ class RealChart(Chart):
 
             sage: A = M.open_subset('A') # annulus 1/2 < r < 1
             sage: X_A = X.restrict(A, x^2+y^2 > 1/4)
-            sage: X_A._restrictions
+            sage: X_A._coord_restrictions
             [x^2 + y^2 < 1, x^2 + y^2 > (1/4)]
             sage: X_A.valid_coordinates(0,1/3)
             False
@@ -1906,14 +1911,16 @@ class RealChart(Chart):
 
         """
         import operator
+        if self.is_immutable():
+            raise ValueError("cannot add restrictions to a chart once it has been used or set immutable")
         if not isinstance(restrictions, list):
             # case of a single condition or conditions to be combined by "or"
             restrictions = [restrictions]
-        self._restrictions.extend(restrictions)
+        self._coord_restrictions.extend(restrictions)
         # Update of the coordinate bounds from the restrictions:
         bounds = list(self._bounds) # convert to a list for modifications
         new_restrictions = []
-        for restrict in self._restrictions:
+        for restrict in self._coord_restrictions:
             restrict_used = False # determines whether restrict is used
                                   # to set some coordinate bound
             if not isinstance(restrict, (tuple, list)): # case of combined
@@ -1956,7 +1963,7 @@ class RealChart(Chart):
                 # it is maintained in the list of restrictions:
                 new_restrictions.append(restrict)
         self._bounds = tuple(bounds)
-        self._restrictions = new_restrictions
+        self._coord_restrictions = new_restrictions
         self._fast_valid_coordinates = None
 
 
@@ -2036,11 +2043,12 @@ class RealChart(Chart):
             res = type(self)(subset, coordinates,
                              calc_method=self._calc_method._current)
             res._bounds = self._bounds
-            res._restrictions.extend(self._restrictions)
+            res._coord_restrictions.extend(self._coord_restrictions)
             # The coordinate restrictions are added to the result chart and
             # possibly transformed into coordinate bounds:
             if restrictions is not None:
                 res.add_restrictions(restrictions)
+            res.set_immutable()
             # Update of supercharts and subcharts:
             res._supercharts.update(self._supercharts)
             for schart in self._supercharts:
@@ -2145,11 +2153,11 @@ class RealChart(Chart):
             elif x >= xmax:
                 return False
         # Check of additional restrictions:
-        if self._restrictions:
+        if self._coord_restrictions:
             substitutions = dict(zip(self._xx, coordinates))
             if parameters:
                 substitutions.update(parameters)
-            return self._check_restrictions(self._restrictions, substitutions)
+            return self._check_restrictions(self._coord_restrictions, substitutions)
         return True
 
     def valid_coordinates_numerical(self, *coordinates):
@@ -2215,19 +2223,21 @@ class RealChart(Chart):
         if self._fast_valid_coordinates is not None:
             return self._fast_valid_coordinates(*coordinates)
 
+        self.set_immutable()
+
         # case fast callable has to be computed
         from operator import lt, gt
 
-        if not isinstance(self._restrictions, list):
-            if isinstance(self._restrictions, tuple):
-                self._restrictions = [self._restrictions]
-            elif isinstance(self._restrictions, Expression):
-                self._restrictions = [(self._restrictions,)]
+        if not isinstance(self._coord_restrictions, list):
+            if isinstance(self._coord_restrictions, tuple):
+                self._coord_restrictions = [self._coord_restrictions]
+            elif isinstance(self._coord_restrictions, Expression):
+                self._coord_restrictions = [(self._coord_restrictions,)]
             else:
                 raise ValueError("restrictions must be in CNF (list of tuples)")
 
         list_of_clause = []
-        for clause in self._restrictions:
+        for clause in self._coord_restrictions:
             if not isinstance(clause, tuple):
                 if isinstance(clause, Expression):
                     clause = (clause,)
