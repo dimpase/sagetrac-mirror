@@ -41,6 +41,7 @@ from sage.structure.sage_object import SageObject
 from sage.structure.element import Element
 from sage.misc.classcall_metaclass import ClasscallMetaclass
 from sage.misc.inherit_comparison import InheritComparisonClasscallMetaclass
+from sage.misc.fast_methods import WithEqualityById
 from sage.categories.sets_cat import Sets
 from sage.categories.topological_spaces import TopologicalSpaces
 from sage.categories.homset import Hom
@@ -56,7 +57,7 @@ from sage.symbolic.expression import Expression
 from sage.ext.fast_callable import fast_callable
 
 
-class Chart(Map, metaclass=InheritComparisonClasscallMetaclass):
+class Chart(Map, WithEqualityById, metaclass=InheritComparisonMetaclass):
     r"""
     Chart on a topological manifold.
 
