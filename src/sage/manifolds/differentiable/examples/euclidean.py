@@ -675,10 +675,6 @@ class EuclideanSpace(PseudoRiemannianManifold):
         if names is not None and symbols is None:
             if n == 2:
                 names = list(names)
-                symbols = ''
-                for x in names:
-                    symbols += x + ' '
-                symbols = symbols[:-1]
                 if coordinates == 'polar':
                     if names[1] in ['p', 'ph', 'phi']:
                         names[1] += ':\\phi'
@@ -698,16 +694,13 @@ class EuclideanSpace(PseudoRiemannianManifold):
                     if names[1] in ['p', 'ph', 'phi']:
                         names[1] = names[1] + ':\\phi'
 
-            symbols = ''
-            for x in names:
-                symbols += x + ' '
-            symbols = symbols[:-1]
+            symbols = ' '.join(x for x in names)
 
         # Technical bit for UniqueRepresentation
         from sage.misc.prandom import getrandbits
         from time import time
         if unique_tag is None:
-            unique_tag = getrandbits(128)*time()
+            unique_tag = getrandbits(128) * time()
 
         if n == 2:
             return EuclideanPlane(name=name, latex_name=latex_name,
@@ -791,7 +784,7 @@ class EuclideanSpace(PseudoRiemannianManifold):
                 if coordinates == 'Cartesian':
                     symbols = 'x'
                 else:
-                    raise TypeError("unkown coordinate type")
+                    raise TypeError("unknown coordinate type")
             elif n > 3:
                 if coordinates == 'Cartesian':
                     symbols = ''
@@ -799,7 +792,7 @@ class EuclideanSpace(PseudoRiemannianManifold):
                         symbols += "x{}".format(i) + r":x_{" + str(i) + r"} "
                     symbols = symbols[:-1]
                 else:
-                    raise TypeError("unkown coordinate type")
+                    raise TypeError("unknown coordinate type")
             else:
                 raise NotImplementedError("dimension not implemented yet")
         self._cartesian_chart = None  # to be constructed later if necessary
@@ -1197,7 +1190,7 @@ class EuclideanPlane(EuclideanSpace):
 
         """
         if coordinates not in ['Cartesian', 'polar']:
-            raise TypeError("unkown coordinate type")
+            raise TypeError("unknown coordinate type")
         if symbols is None:
             if coordinates == 'Cartesian':
                 symbols = 'x y'
@@ -1726,7 +1719,7 @@ class Euclidean3dimSpace(EuclideanSpace):
 
         """
         if coordinates not in ['Cartesian', 'spherical', 'cylindrical']:
-            raise TypeError("unkown coordinate type")
+            raise TypeError("unknown coordinate type")
         if symbols is None:
             if coordinates == 'Cartesian':
                 symbols = 'x y z'
