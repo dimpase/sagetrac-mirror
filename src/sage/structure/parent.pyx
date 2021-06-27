@@ -1145,6 +1145,8 @@ cdef class Parent(sage.structure.category_object.CategoryObject):
 
             sage: I in QQbar
             True
+            sage: sqrt(-1) in QQbar
+            True
         """
         P = parent(x)
         if P is self or P == self:
