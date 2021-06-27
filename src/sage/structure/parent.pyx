@@ -1140,6 +1140,11 @@ cdef class Parent(sage.structure.category_object.CategoryObject):
             False
             sage: 15/36 in Integers(6)
             False
+
+        Check that :trac:`24209` is fixed::
+
+            sage: I in QQbar
+            True
         """
         P = parent(x)
         if P is self or P == self:
