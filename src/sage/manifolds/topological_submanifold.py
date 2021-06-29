@@ -675,7 +675,7 @@ class TopologicalSubmanifold(TopologicalManifold):
                 #     start_index != 0
                 for i in range(len(self._var)):
                     subs[self._var[i]] = chart[:][self._dim + i]
-                for rest in chart1._restrictions:
+                for rest in chart1._coord_restrictions:
                     chart.add_restrictions(rest.subs(subs))
                 for _a in assumptions(*(chart1[:] + tuple(self._var))):
                     if isinstance(_a, Expression):
