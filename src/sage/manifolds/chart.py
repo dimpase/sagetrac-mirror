@@ -308,32 +308,9 @@ class Chart(WithEqualityById, Mutability, SageObject):
         # _init_coordinates, which sets self._xx and
         # which may be redefined for subclasses (for instance RealChart).
         self._init_coordinates(coord_list)
-        coord_string = ' '.join(str(x) for x in self._xx)
-        if coord_string in self._domain._charts_by_coord:
-            raise ValueError("the chart with coordinates " + coord_string +
-                             " has already been declared on " +
-                             "the {}".format(self._domain))
-        self._domain._charts_by_coord[coord_string] = self
-        #
         # Additional restrictions on the coordinates
         self._coord_restrictions = []  # to be set with method add_restrictions()
         #
-        # The chart is added to the domain's atlas, as well as to all the
-        # atlases of the domain's supersets; moreover the first defined chart
-        # is considered as the default chart
-        for sd in self._domain.open_supersets():
-            # the chart is added in the top charts only if its coordinates have
-            # not been used:
-            for chart in sd._atlas:
-                if self._xx == chart._xx:
-                    break
-            else:
-                sd._top_charts.append(self)
-            sd._atlas.append(self)
-            if sd._def_chart is None:
-                sd._def_chart = self
-        # The chart is added to the list of the domain's covering charts:
-        self._domain._covering_charts.append(self)
         # Initialization of the set of charts that are restrictions of the
         # current chart to subsets of the chart domain:
         self._subcharts = set([self])
@@ -344,12 +321,6 @@ class Chart(WithEqualityById, Mutability, SageObject):
         self._dom_restrict = {}  # dict. of the restrictions of self to
                                  # subsets of self._domain, with the
                                  # subsets as keys
-        # The null and one functions of the coordinates:
-        # Expression in self of the zero and one scalar fields of open sets
-        # containing the domain of self:
-        for dom in self._domain.open_supersets():
-            dom._zero_scalar_field._express[self] = self.function_ring().zero()
-            dom._one_scalar_field._express[self] = self.function_ring().one()
 
     def _init_coordinates(self, coord_list):
         r"""

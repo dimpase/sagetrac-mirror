@@ -1568,8 +1568,36 @@ class TopologicalManifold(ManifoldSubset):
         """
         if calc_method is None:
             calc_method = self._calculus_method
-        return self._structure.chart(self, coordinates=coordinates,
-                                     names=names, calc_method=calc_method)
+        chart = self._structure.chart(self, coordinates=coordinates,
+                                      names=names, calc_method=calc_method)
+        coord_string = ' '.join(str(x) for x in chart._xx)
+        if coord_string in self._charts_by_coord:
+            raise ValueError(f"the chart with coordinates {coord_string}" +
+                             f" has already been declared on the {self}")
+        self._charts_by_coord[coord_string] = self
+        # The chart is added to the domain's atlas, as well as to all the
+        # atlases of the domain's supersets; moreover the first defined chart
+        # is considered as the default chart
+        for sd in self.open_supersets():
+            # the chart is added in the top charts only if its coordinates have
+            # not been used:
+            for sd_chart in sd._atlas:
+                if chart._xx == sd_chart._xx:
+                    break
+            else:
+                sd._top_charts.append(chart)
+            sd._atlas.append(chart)
+            if sd._def_chart is None:
+                sd._def_chart = chart
+        # The chart is added to the list of the domain's covering charts:
+        self._covering_charts.append(chart)
+        # The null and one functions of the coordinates:
+        # Expression in self of the zero and one scalar fields of open sets
+        # containing the domain of self:
+        for dom in self.open_supersets():
+            dom._zero_scalar_field._express[chart] = chart.function_ring().zero()
+            dom._one_scalar_field._express[chart] = chart.function_ring().one()
+        return chart
 
     def is_open(self):
         """
