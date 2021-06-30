@@ -258,27 +258,37 @@ class DiffChart(Chart):
         :class:`~sage.manifolds.differentiable.chart.RealDiffChart` for charts
         on differentiable manifolds over `\RR`.
 
+    TESTS::
+
+        sage: M = Manifold(2, 'M', field='complex')
+        sage: X.<x,y> = M.chart()
+        sage: X
+        Chart (M, (x, y))
+        sage: type(X)
+        <class 'sage.manifolds.differentiable.chart.DiffChart'>
+        sage: assumptions() # no assumptions on x,y set by X._init_coordinates
+        []
+        sage: TestSuite(X).run()
+
     """
-    def __init__(self, domain, coordinates='', names=None, calc_method=None):
-        r"""
-        Construct a chart.
 
-        TESTS::
+    def set_immutable(self):
+        super().set_immutable()
+        # Construction of the coordinate frame associated to the chart.
+        # It is deferred to here because this is when self becomes hashable.
+        self._frame = CoordFrame(self)
+        self._coframe = self._frame._coframe
 
-            sage: M = Manifold(2, 'M', field='complex')
-            sage: X.<x,y> = M.chart()
-            sage: X
-            Chart (M, (x, y))
-            sage: type(X)
-            <class 'sage.manifolds.differentiable.chart.DiffChart'>
-            sage: assumptions() # no assumptions on x,y set by X._init_coordinates
-            []
-            sage: TestSuite(X).run()
+    def __getstate__(self):
+        d = super().__getstate__().copy()
+        # These are keyed to self via UniqueRepresentation
+        del d['_frame']
+        del d['_coframe']
+        return d
 
-        """
-        Chart.__init__(self, domain, coordinates=coordinates, names=names,
-                       calc_method=calc_method)
-        # Construction of the coordinate frame associated to the chart:
+    def __setstate__(self, d):
+        super().__setstate__(d)
+        # Reconstruct the coordinate frame associated to the chart:
         self._frame = CoordFrame(self)
         self._coframe = self._frame._coframe
 
@@ -941,31 +951,20 @@ class RealDiffChart(DiffChart, RealChart):
     Chart grids can be drawn in 2D or 3D graphics thanks to the method
     :meth:`~sage.manifolds.chart.RealChart.plot`.
 
+    TESTS::
+
+        sage: forget()  # for doctests only
+        sage: M = Manifold(2, 'M')
+        sage: X.<x,y> = M.chart()
+        sage: X
+        Chart (M, (x, y))
+        sage: type(X)
+        <class 'sage.manifolds.differentiable.chart.RealDiffChart'>
+        sage: assumptions()  # assumptions set in X._init_coordinates
+        [x is real, y is real]
+        sage: TestSuite(X).run()
+
     """
-    def __init__(self, domain, coordinates='', names=None, calc_method=None):
-        r"""
-        Construct a chart on a real differentiable manifold.
-
-        TESTS::
-
-            sage: forget()  # for doctests only
-            sage: M = Manifold(2, 'M')
-            sage: X.<x,y> = M.chart()
-            sage: X
-            Chart (M, (x, y))
-            sage: type(X)
-            <class 'sage.manifolds.differentiable.chart.RealDiffChart'>
-            sage: assumptions()  # assumptions set in X._init_coordinates
-            [x is real, y is real]
-            sage: TestSuite(X).run()
-
-        """
-        RealChart.__init__(self, domain, coordinates=coordinates, names=names,
-                           calc_method = calc_method)
-        # Construction of the coordinate frame associated to the chart:
-        self._frame = CoordFrame(self)
-        self._coframe = self._frame._coframe
-
 
     def restrict(self, subset, restrictions=None):
         r"""
@@ -1189,7 +1188,7 @@ class DiffCoordChange(CoordChange):
         """
         return self._jacobian  # has been computed in __init__
 
-    @cached_method
+    @cached_method(key=id, do_pickle=True)
     def jacobian_det(self):
         r"""
         Return the Jacobian determinant of ``self``.

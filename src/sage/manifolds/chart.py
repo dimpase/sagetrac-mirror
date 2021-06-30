@@ -51,7 +51,7 @@ from sage.symbolic.expression import Expression
 from sage.ext.fast_callable import fast_callable
 
 
-class Chart(WithEqualityById, Mutability, SageObject):
+class Chart(SageObject, WithEqualityById, Mutability):
     r"""
     Chart on a topological manifold.
 
@@ -314,14 +314,61 @@ class Chart(WithEqualityById, Mutability, SageObject):
         #
         # Initialization of the set of charts that are restrictions of the
         # current chart to subsets of the chart domain:
-        self._subcharts = set([self])
+        self._subcharts = tuple([self])
         # Initialization of the set of charts which the current chart is a
         # restriction of:
-        self._supercharts = set([self])
+        self._supercharts = tuple([self])
         #
         self._dom_restrict = {}  # dict. of the restrictions of self to
                                  # subsets of self._domain, with the
                                  # subsets as keys
+
+    def set_immutable(self):
+        super().set_immutable()
+        self._subcharts = set(self._subcharts)
+        self._supercharts = set(self._supercharts)
+
+    ## def __getstate__(self):
+    ##     return self.__dict__
+
+    ## def __setstate__(self, d):
+    ##     print("Fooooo")
+    ##     self.__dict__.update(d)
+
+    def __hash__(self):
+        try:
+            return self._hash
+        except AttributeError:
+            if not self.is_immutable():
+                raise TypeError('Charts are unhashable until set_immutable() has been called')
+            # Do not hash the domain because it owns self
+            # Do not hash sheafy attributes: _subcharts, _supercharts, _dom_restrict
+            self._hash = hash((self._domain._name, self._sindex,
+                               self._calc_method, self._xx,
+                               tuple(self._periods.items()),
+                               repr(self._coord_restrictions), # hash the string of the unhashable
+                               ))
+            return self._hash
+
+    def _non_sheafy_attributes(self):
+        for key, value in self.__dict__:
+            if key not in ('_subcharts', '_supercharts', '_dom_restrict'):
+                yield key, value
+
+    def __eq__(self, other):
+        if self is other:
+            return True
+        if type(self) != type(other):
+            return False
+        if self._xx != other._xx:
+            return False
+        return dict(self._non_sheafy_attributes() == other._non_sheafy_attributes())
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    def __getstate__(self):
+        return dict(self._non_sheafy_attributes())
 
     def _init_coordinates(self, coord_list):
         r"""
