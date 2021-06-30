@@ -324,9 +324,17 @@ class Chart(SageObject, WithEqualityById, Mutability):
                                  # subsets as keys
 
     def set_immutable(self):
+        if self.is_immutable():
+            return
         super().set_immutable()
         self._subcharts = set(self._subcharts)
         self._supercharts = set(self._supercharts)
+        # The null and one functions of the coordinates:
+        # Expression in self of the zero and one scalar fields of open sets
+        # containing the domain of self:
+        for dom in self._domain.open_supersets():
+            dom._zero_scalar_field._express[self] = self.function_ring().zero()
+            dom._one_scalar_field._express[self] = self.function_ring().one()
 
     ## def __getstate__(self):
     ##     return self.__dict__
@@ -344,14 +352,16 @@ class Chart(SageObject, WithEqualityById, Mutability):
             # Do not hash the domain because it owns self
             # Do not hash sheafy attributes: _subcharts, _supercharts, _dom_restrict
             self._hash = hash((self._domain._name, self._sindex,
-                               self._calc_method, self._xx,
+                               ## _calc_method is not hashable
+                               #self._calc_method,
+                               self._xx,
                                tuple(self._periods.items()),
                                repr(self._coord_restrictions), # hash the string of the unhashable
                                ))
             return self._hash
 
     def _non_sheafy_attributes(self):
-        for key, value in self.__dict__:
+        for key, value in self.__dict__.items():
             if key not in ('_subcharts', '_supercharts', '_dom_restrict'):
                 yield key, value
 
@@ -362,13 +372,15 @@ class Chart(SageObject, WithEqualityById, Mutability):
             return False
         if self._xx != other._xx:
             return False
-        return dict(self._non_sheafy_attributes() == other._non_sheafy_attributes())
+        return dict(self._non_sheafy_attributes()) == dict(other._non_sheafy_attributes())
 
     def __ne__(self, other):
         return not (self == other)
 
     def __getstate__(self):
-        return dict(self._non_sheafy_attributes())
+        d = dict(self._non_sheafy_attributes())
+        d['_is_immutable'] = self.is_immutable()
+        return d
 
     def _init_coordinates(self, coord_list):
         r"""
@@ -545,6 +557,7 @@ class Chart(SageObject, WithEqualityById, Mutability):
             (0, 0)
 
         """
+        self.set_immutable()
         return point.coord(self)
 
     def domain(self):
@@ -734,6 +747,7 @@ class Chart(SageObject, WithEqualityById, Mutability):
             Chart (B, (z1, z2))
 
         """
+        self.set_immutable()
         if subset == self._domain:
             return self
         if subset not in self._dom_restrict:
@@ -1108,6 +1122,7 @@ class Chart(SageObject, WithEqualityById, Mutability):
             sage: X.function_ring()
             Ring of chart functions on Chart (M, (x, y))
         """
+        self.set_immutable()
         return ChartFunctionRing(self)
 
     def function(self, expression, calc_method=None, expansion_symbol=None,
@@ -2145,32 +2160,7 @@ class RealChart(Chart):
             True
 
         """
-        if subset == self._domain:
-            return self
-        if subset not in self._dom_restrict:
-            if not subset.is_subset(self._domain):
-                raise ValueError("the specified subset is not a subset " +
-                                 "of the domain of definition of the chart")
-            coordinates = ""
-            for coord in self._xx:
-                coordinates += repr(coord) + ' '
-            res = type(self)(subset, coordinates,
-                             calc_method=self._calc_method._current)
-            res._bounds = self._bounds
-            res._coord_restrictions.extend(self._coord_restrictions)
-            # The coordinate restrictions are added to the result chart and
-            # possibly transformed into coordinate bounds:
-            if restrictions is not None:
-                res.add_restrictions(restrictions)
-            res.set_immutable()
-            # Update of supercharts and subcharts:
-            res._supercharts.update(self._supercharts)
-            for schart in self._supercharts:
-                schart._subcharts.add(res)
-                schart._dom_restrict[subset] = res
-            # Update of domain restrictions:
-            self._dom_restrict[subset] = res
-        return self._dom_restrict[subset]
+        return super().restrict(subset, restrictions)
 
     def valid_coordinates(self, *coordinates, **kwds):
         r"""
@@ -2234,6 +2224,7 @@ class RealChart(Chart):
             True
 
         """
+        self.set_immutable()
         n = len(coordinates)
         if n != self._manifold._dim:
             return False
@@ -3111,6 +3102,8 @@ class CoordChange(SageObject):
             sage: TestSuite(X_to_Y).run()
 
         """
+        chart1.set_immutable()
+        chart2.set_immutable()
         self._n1 = len(chart1._xx)
         self._n2 = len(chart2._xx)
         if len(transformations) != self._n2:

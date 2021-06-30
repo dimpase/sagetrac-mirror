@@ -197,9 +197,11 @@ class ManifoldPoint(Element):
             if chart is None:
                 chart = parent._def_chart
             elif isinstance(parent, TopologicalManifold):
+                chart.set_immutable()
                 if chart not in parent._atlas:
                     raise ValueError("the {} has not been".format(chart) +
                                      "defined on the {}".format(parent))
+            chart.set_immutable()
             if check_coords:
                 if not chart.valid_coordinates(*coords):
                     raise ValueError("the coordinates {}".format(coords) +

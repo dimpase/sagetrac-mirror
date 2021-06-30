@@ -1591,12 +1591,6 @@ class TopologicalManifold(ManifoldSubset):
                 sd._def_chart = chart
         # The chart is added to the list of the domain's covering charts:
         self._covering_charts.append(chart)
-        # The null and one functions of the coordinates:
-        # Expression in self of the zero and one scalar fields of open sets
-        # containing the domain of self:
-        for dom in self.open_supersets():
-            dom._zero_scalar_field._express[chart] = chart.function_ring().zero()
-            dom._one_scalar_field._express[chart] = chart.function_ring().one()
         return chart
 
     def is_open(self):

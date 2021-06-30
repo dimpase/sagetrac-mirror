@@ -279,18 +279,21 @@ class DiffChart(Chart):
         self._frame = CoordFrame(self)
         self._coframe = self._frame._coframe
 
-    def __getstate__(self):
-        d = super().__getstate__().copy()
-        # These are keyed to self via UniqueRepresentation
-        del d['_frame']
-        del d['_coframe']
-        return d
+    ## def __getstate__(self):
+    ##     d = super().__getstate__().copy()
+    ##     # These are keyed to self via UniqueRepresentation
+    ##     try:
+    ##         del d['_frame']
+    ##     except KeyError:
+    ##         pass
+    ##     del d['_coframe']
+    ##     return d
 
-    def __setstate__(self, d):
-        super().__setstate__(d)
-        # Reconstruct the coordinate frame associated to the chart:
-        self._frame = CoordFrame(self)
-        self._coframe = self._frame._coframe
+    ## def __setstate__(self, d):
+    ##     super().__setstate__(d)
+    ##     # Reconstruct the coordinate frame associated to the chart:
+    ##     self._frame = CoordFrame(self)
+    ##     self._coframe = self._frame._coframe
 
     def transition_map(self, other, transformations, intersection_name=None,
                        restrictions1=None, restrictions2=None):
@@ -458,6 +461,7 @@ class DiffChart(Chart):
                (x, y) |--> 1
 
         """
+        self.set_immutable()
         return self._frame
 
     def coframe(self):
@@ -507,6 +511,7 @@ class DiffChart(Chart):
                (x, y) |--> 1
 
         """
+        self.set_immutable()
         return self._coframe
 
     def restrict(self, subset, restrictions=None):
