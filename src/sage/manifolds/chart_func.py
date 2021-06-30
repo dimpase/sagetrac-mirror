@@ -2641,7 +2641,7 @@ class ChartFunction(AlgebraElement, ModuleElementWithMutability):
         self._del_derived()
         return self
 
-class ChartFunctionRing(Parent, UniqueRepresentation):
+class ChartFunctionRing(Parent):
     """
     Ring of all chart functions on a chart.
 

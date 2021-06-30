@@ -43,6 +43,7 @@ from sage.symbolic.ring import SR
 from sage.rings.infinity import Infinity
 from sage.misc.latex import latex
 from sage.misc.decorators import options
+from sage.misc.cachefunc import cached_method
 from sage.misc.fast_methods import WithEqualityById
 from sage.manifolds.chart_func import ChartFunctionRing
 from sage.manifolds.calculus_method import CalculusMethod
@@ -1048,6 +1049,7 @@ class Chart(WithEqualityById, Mutability, SageObject):
 
     pullback = preimage
 
+    @cached_method(key=id)
     def function_ring(self):
         """
         Return the ring of coordinate functions on ``self``.
@@ -1059,7 +1061,6 @@ class Chart(WithEqualityById, Mutability, SageObject):
             sage: X.function_ring()
             Ring of chart functions on Chart (M, (x, y))
         """
-
         return ChartFunctionRing(self)
 
     def function(self, expression, calc_method=None, expansion_symbol=None,
