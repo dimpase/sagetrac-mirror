@@ -1579,10 +1579,11 @@ class TopologicalManifold(ManifoldSubset):
         # atlases of the domain's supersets; moreover the first defined chart
         # is considered as the default chart
         for sd in self.open_supersets():
-            # the chart is added in the top charts only if its coordinates have
-            # not been used:
+            # the chart is added in the top charts iff its coordinates have
+            # not been used on a domain including the chart's domain:
             for sd_chart in sd._atlas:
-                if chart._xx == sd_chart._xx:
+                if (self.is_subset(sd_chart._domain)
+                    and chart._xx == sd_chart._xx):
                     break
             else:
                 sd._top_charts.append(chart)

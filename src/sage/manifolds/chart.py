@@ -279,6 +279,16 @@ class Chart(SageObject, WithEqualityById, Mutability):
             []
             sage: TestSuite(X).run()
 
+        Check that :trac:`32112` has been fixed::
+
+            sage: M = Manifold(2, 'M', structure='topological')
+            sage: U = M.open_subset('U')
+            sage: V = M.open_subset('V')
+            sage: XU = U.chart('x y')
+            sage: XV = V.chart('x y')
+            sage: M.top_charts()
+            [Chart (U, (x, y)), Chart (V, (x, y))]
+
         """
         from sage.manifolds.manifold import TopologicalManifold
         if not isinstance(domain, TopologicalManifold):
