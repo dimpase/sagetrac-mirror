@@ -1291,9 +1291,9 @@ cdef class Map(Element):
             raise ValueError("This map became defunct by garbage collection")
         return hash((self.domain(), self._codomain))
 
-    def image(self, *, S=None):
+    def image(self, *, domain_subset=None):
         """
-        Return the image of the domain or of ``I``.
+        Return the image of the domain or of ``domain_subset``.
         """
         D = self.domain()
         if D is None:
@@ -1305,8 +1305,15 @@ cdef class Map(Element):
             except NotImplementedError:
                 pass
             S = D
-        category = phi.category_for()._meet_(S.category())
-        # TODO: Now create an ImageSet with this category...
+        from sage.sets.set import Set_base
+        from sage.sets.image_set import ImageSubobject, ImageSet
+        if isinstance(S, Set_base):
+            # Most of our parents are sets, but the mixin class Set_base
+            # provides the full kit of operators.  The image should get them too.
+            cls = ImageSet
+        else:
+            cls = ImageSubobject
+        return cls(self, domain_subset)
 
 
 cdef class Section(Map):
