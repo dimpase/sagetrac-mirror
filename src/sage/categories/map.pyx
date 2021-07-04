@@ -1291,6 +1291,24 @@ cdef class Map(Element):
             raise ValueError("This map became defunct by garbage collection")
         return hash((self.domain(), self._codomain))
 
+    def image(self, *, S=None):
+        """
+        Return the image of the domain or of ``I``.
+        """
+        D = self.domain()
+        if D is None:
+            raise ValueError("This map became defunct by garbage collection")
+        if S is None or S == D:
+            try:
+                if self.is_surjective():
+                    return D
+            except NotImplementedError:
+                pass
+            S = D
+        category = phi.category_for()._meet_(S.category())
+        # TODO: Now create an ImageSet with this category...
+
+
 cdef class Section(Map):
     """
     A formal section of a map.
