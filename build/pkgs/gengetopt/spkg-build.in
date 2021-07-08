@@ -1,0 +1,13 @@
+cd src
+sdh_configure
+
+# Use $MAKE directly instead of sdh_make so that we can check the
+# return value.
+if ! ${MAKE:-make}; then
+  # The documentation build can fail if "makeinfo" is not installed.
+  # This isn't really a problem because the docs are shipped as part
+  # of the tarball, but we need to "touch" them here to let the
+  # build system know that they don't need to be updated.
+  touch doc/gengetopt.info doc/gengetopt.html
+  sdh_make
+fi
